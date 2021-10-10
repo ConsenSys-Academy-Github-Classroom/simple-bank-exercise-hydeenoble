@@ -32,7 +32,7 @@ contract SimpleBank {
     event LogEnrolled(address accountAddress);
 
     // Add 2 arguments for this event, an accountAddress and an amount
-    event LogDepositMade();
+    event LogDepositMade(address accountAddress, uint amount);
 
     // Create an event called LogWithdrawal
     // Hint: it should take 3 arguments: an accountAddress, withdrawAmount and a newBalance 
@@ -72,7 +72,7 @@ contract SimpleBank {
 
     /// @notice Deposit ether into bank
     /// @return The balance of the user after the deposit is made
-    function deposit() public returns (uint) {
+    function deposit() public payable returns (uint) {
       // 1. Add the appropriate keyword so that this function can receive ether
     
       // 2. Users should be enrolled before they can make deposits
@@ -83,6 +83,10 @@ contract SimpleBank {
       // 4. Emit the appropriate event associated with this function
 
       // 5. return the balance of sndr of this transaction
+      require(enrolled[msg.sender]);
+      msg.sender.balance += msg.value;
+      emit LogDepositMade(msg.sender, msg.value)
+      return msg.sender.balance
     }
 
     /// @notice Withdraw ether from bank
