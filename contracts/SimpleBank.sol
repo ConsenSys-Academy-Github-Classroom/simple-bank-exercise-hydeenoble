@@ -36,7 +36,7 @@ contract SimpleBank {
 
     // Create an event called LogWithdrawal
     // Hint: it should take 3 arguments: an accountAddress, withdrawAmount and a newBalance 
-    event LogWithdrawal(address accountAddress, uint withdrawAmount, uint newBalance);
+    event LogWithdrawal(address accountAddress, uint256 withdrawAmount, uint newBalance);
 
     /* Functions
      */
@@ -86,7 +86,7 @@ contract SimpleBank {
       // 5. return the balance of sndr of this transaction
       require(enrolled[msg.sender]);
 
-      uint userBalance = address(msg.sender).balance;
+      uint userBalance = address(this).balance;
       userBalance += msg.value;
 
       emit LogDepositMade(msg.sender, msg.value);
@@ -111,12 +111,12 @@ contract SimpleBank {
 
       // 3. Emit the appropriate event for this message
 
-      uint userBalance = address(msg.sender).balance;
+      uint userBalance = address(this).balance;
 
       require(userBalance >= withdrawAmount);
 
       userBalance -= withdrawAmount;
-      
+
       address(msg.sender).transfer(withdrawAmount);
 
       emit LogWithdrawal(msg.sender, withdrawAmount, userBalance);
