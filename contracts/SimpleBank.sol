@@ -52,10 +52,11 @@ contract SimpleBank {
 
     /// @notice Get balance
     /// @return The balance of the user
-    function getBalance() public returns (uint) {
+    function getBalance() public view returns (uint) {
       // 1. A SPECIAL KEYWORD prevents function from editing state variables;
       //    allows function to run locally/off blockchain
       // 2. Get the balance of the sender of this transaction
+      return address(this).balance;
     }
 
     /// @notice Enroll a customer with the bank
@@ -84,9 +85,13 @@ contract SimpleBank {
 
       // 5. return the balance of sndr of this transaction
       require(enrolled[msg.sender]);
-      msg.sender.balance += msg.value;
-      emit LogDepositMade(msg.sender, msg.value)
-      return msg.sender.balance
+
+      uint contractBalance = address(this).balance;
+      contractBalance = contractBalance + msg.value;
+
+      emit LogDepositMade(msg.sender, msg.value);
+
+      return contractBalance;
     }
 
     /// @notice Withdraw ether from bank
